@@ -1,66 +1,69 @@
 class businfomodel {
   String? id;
   String? bustypId;
+  String? tripId;
   String? leavingFrom;
   String? goingTo;
   String? name;
-  String? seattype;
   String? seatcapacity;
   String? fare;
   String? day;
+  String? row;
+  String? coloumn;
   String? departureTime;
-  String? description;
-
   String? createdAt;
   String? updatedAt;
 
   businfomodel(
-      {this.id,
-      this.bustypId,
-      this.leavingFrom,
-      this.goingTo,
-      this.name,
-      this.seattype,
-      this.seatcapacity,
-      this.fare,
-      this.day,
-      this.departureTime,
-      this.description,
-      this.createdAt,
-      this.updatedAt});
+      {
+        this.id,
+        this.bustypId,
+        this.tripId,
+        this.leavingFrom,
+        this.goingTo,
+        this.name,
+        this.seatcapacity,
+        this.fare,
+        this.day,
+        this.row,
+        this.coloumn,
+        this.departureTime,
+        this.createdAt,
+        this.updatedAt});
 
   businfomodel.fromJson(Map<String, dynamic> json) {
-    id = json['id'].toString();
-    bustypId = json['bustyp_id'].toString();
-    leavingFrom = json['leaving_from'].toString();
-    goingTo = json['going_to'].toString();
-    name = json['name'].toString();
-    seattype = json['seattype'].toString();
-    seatcapacity = json['seatcapacity'].toString();
-    fare = json['fare'].toString();
-    day = json['day'].toString();
-    departureTime = json['departure_time'].toString();
-    description = json['description'].toString();
-
-    createdAt = json['created_at'].toString();
-    updatedAt = json['updated_at'].toString();
+    id = json['id'];
+    bustypId = json['bustypId'];
+    tripId = json['tripId'];
+    leavingFrom = json['leavingFrom'];
+    goingTo = json['goingTo'];
+    name = json['name'];
+    seatcapacity = json['seatcapacity'];
+    fare = json['fare'];
+    day = json['day'];
+    row = json['row'];
+    coloumn = json['coloumn'];
+    departureTime = json['departure_time'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['bustyp_id'] = this.bustypId;
-    data['leaving_from'] = this.leavingFrom;
-    data['going_to'] = this.goingTo;
+    data['bustypId'] = this.bustypId;
+    data['tripId'] = this.tripId;
+    data['leavingFrom'] = this.leavingFrom;
+    data['goingTo'] = this.goingTo;
     data['name'] = this.name;
-    data['seattype'] = this.seattype;
     data['seatcapacity'] = this.seatcapacity;
     data['fare'] = this.fare;
     data['day'] = this.day;
+    data['row'] = this.row;
+    data['coloumn'] = this.coloumn;
     data['departure_time'] = this.departureTime;
-    data['description'] = this.description;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
+    data['createdAt'] = this.createdAt;
+    data['updatedAt'] = this.updatedAt;
     return data;
   }
 }

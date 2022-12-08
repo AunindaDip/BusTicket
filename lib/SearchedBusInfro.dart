@@ -41,6 +41,10 @@ class _SearchedbusState extends State<Searchedbus> {
           future: fetchbusinfo(widget.leaving, widget.destination, widget.date),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.data == null) {
+              print(widget.leaving.toString().toLowerCase() +
+                  widget.destination.toString() +
+                  widget.date.toString() +
+                  "Doo");
               return Center(
                   child: Container(
                 child: Text("dip"),
@@ -50,6 +54,12 @@ class _SearchedbusState extends State<Searchedbus> {
               return ListView.builder(
                   itemCount: snapshot.data.length,
                   itemBuilder: (BuildContext context, int Index) {
+                    print(widget.leaving.toString().toLowerCase() +
+                        widget.destination.toString() +
+                        widget.date.toString() +
+                        "Dip");
+
+                    print(snapshot.hasData.toString());
                     return Row(
                       children: [
                         Expanded(
@@ -118,15 +128,17 @@ class _SearchedbusState extends State<Searchedbus> {
                                   children: [
                                     Center(
                                         child: TextButton(
-                                      onPressed: () {
+                                        onPressed: () {
+                                        Navigator.of(context)
+                                            .push(MaterialPageRoute(
+                                                builder: (context) => seat_view(
+                                                      id: snapshot
+                                                          .data[Index].id
+                                                          .toString(),
+                                                    )));
 
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => seat_view(
-                                                  )),
-                                        );
-
+                                        /*print(
+                                            snapshot.data[Index].id.toString());*/
                                       },
                                       child: Text("View Seats"),
                                     ))
@@ -153,24 +165,23 @@ class _SearchedbusState extends State<Searchedbus> {
 }
 
 Future<List<businfomodel>> fetchbusinfo(String a, b, c) async {
-  var url = Uri.parse("http://btrs.ticket.symbexit.com/api/getbusinfos");
+  var url = Uri.parse("https://btrs.ticket.symbexit.com/api/getbusinfos");
   var data = await http.get(url);
   var jsonData = json.decode(data.body);
-  print(jsonEncode(jsonData));
+  print(jsonData);
   final list = jsonData as List<dynamic>;
-
   return list
       .map((e) => businfomodel.fromJson(e))
       .where((element) =>
-          element.leavingFrom!
+          element.leavingFrom
               .toString()
               .toLowerCase()
               .contains(a.toString().toLowerCase()) &&
-          element.goingTo!
+          element.goingTo
               .toString()
               .toLowerCase()
               .contains(b.toString().toLowerCase()) &&
-          element.day!
+          element.day
               .toString()
               .toLowerCase()
               .contains(c.toString().toLowerCase()))

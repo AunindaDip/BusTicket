@@ -1,4 +1,3 @@
-
 import 'dart:ui';
 import 'package:busticketreservation/SearchedBusInfro.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -35,7 +34,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String _dateTime = DateFormat.yMMMMd('en_US').format(DateTime.now());
   String? select_starting_tcity;
-  String _dayName = DateFormat('yMd', 'en_US').format(DateTime.now());
+  String _dayName = DateFormat('EEEE', 'en_US').format(DateTime.now());
   String? select_destination_tcity;
 
   @override
@@ -94,25 +93,23 @@ class _MyHomePageState extends State<MyHomePage> {
                               const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 4),
                           child: Theme(
                             data: ThemeData(
-                              textTheme: TextTheme(subtitle1:
-                              TextStyle(color: Colors.green,fontSize: 20,
-                                  fontWeight: FontWeight.bold)
-                              ),
+                              textTheme: TextTheme(
+                                  subtitle1: TextStyle(
+                                      color: Colors.green,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold)),
                             ),
                             child: DropdownSearch<String>(
                                 mode: Mode.DIALOG,
                                 showSearchBox: true,
                                 items: citesofbd,
-
                                 showSelectedItems: false,
-                                dropdownSearchDecoration:  InputDecoration(
-
-
+                                dropdownSearchDecoration: InputDecoration(
                                   labelText: "From",
                                   labelStyle: TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold,
-                                  fontSize: 20),
+                                      fontSize: 20),
                                   suffixIcon: Icon(Icons.shop),
                                   hintText: "Select Your Starting City",
                                 ),
@@ -154,10 +151,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         SizedBox(height: 15),
                         Theme(
                           data: ThemeData(
-                            textTheme: TextTheme(subtitle1:
-                            TextStyle(color: Colors.green,fontSize: 20,
-                                fontWeight: FontWeight.bold)
-                            ),
+                            textTheme: TextTheme(
+                                subtitle1: TextStyle(
+                                    color: Colors.green,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold)),
                           ),
                           child: Padding(
                             padding:
@@ -166,7 +164,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                 mode: Mode.DIALOG,
                                 showSearchBox: true,
                                 items: citesofbd,
-
                                 showSelectedItems: true,
                                 dropdownSearchDecoration: InputDecoration(
                                   labelText: "To",
@@ -175,7 +172,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20),
                                   suffixIcon: Icon(Icons.shop),
-
                                   hintText: "Select Your Destination  City",
                                 ),
                                 onChanged: (value) {
@@ -197,45 +193,83 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(
                 height: 20,
               ),
-              SizedBox(
-                height: 200,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.white,
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.blueGrey,
-                        offset: Offset(5.0, 5.0), //(x,y)
-                        blurRadius: 8.0,
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      Text(_dateTime == null
-                          ? "Please Select Your Journey Date "
-                          : _dateTime),
-                      FlatButton(
-                        onPressed: () {
-                          showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime.now(),
-                            lastDate: DateTime.now().add(Duration(days: 10)),
-                          ).then((date) {
-                            setState(() {
-                              _dateTime =
-                                  DateFormat.yMMMMd('en_US').format(date!);
-                              _dayName =
-                                  DateFormat('EEEE', 'en_US').format(date!);
-                              print(_dayName);
-                            });
-                          });
-                        },
-                        child: Text("Click Me"),
-                      )
-                    ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  height: 200,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white,
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.blueGrey,
+                          offset: Offset(5.0, 5.0), //(x,y)
+                          blurRadius: 8.0,
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 2),
+                          child: Text(
+                            "Please Select Your Journey Date ",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                                fontSize: 17),
+                          ),
+                        ),
+                        Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20),
+                          child: Text(
+                            _dateTime == null
+                                ? "Please Select Your Journey Date "
+                                : _dateTime,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green,
+                                fontSize: 20),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.green,
+                                border: Border.all(color: Colors.green)),
+                            child: TextButton(
+                              onPressed: () {
+                                showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime.now(),
+                                  lastDate:
+                                      DateTime.now().add(Duration(days: 15)),
+                                ).then((date) {
+                                  setState(() {
+                                    _dateTime = DateFormat.yMMMMd('en_US')
+                                        .format(date!);
+                                    _dayName = DateFormat('EEEE', 'en_US')
+                                        .format(date!);
+                                    print(_dayName);
+                                  });
+                                });
+                              },
+                              child: Text("Change date",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                      fontSize: 15)),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -243,26 +277,41 @@ class _MyHomePageState extends State<MyHomePage> {
                 height: 20,
               ),
               SizedBox(
-                height: 40,
-                child: Container(
-                  color: Colors.green,
-                  child: TextButton(
-                    onPressed: () {
-                      print(select_starting_tcity.toString() +
-                          select_destination_tcity.toString() +
-                          _dayName.toString());
+                height: 60,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.green,
+                      border: Border.all(color: Colors.green),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.blueGrey,
+                          offset: Offset(5.0, 5.0), //(x,y)
+                          blurRadius: 8.0,
+                        ),
+                      ],
+                    ),
+                    child: TextButton(
+                      onPressed: () {
 
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Searchedbus(
-                                leaving: select_starting_tcity.toString(),
-                                destination:
-                                    select_destination_tcity.toString(),
-                                date: _dayName.toString())),
-                      );
-                    },
-                    child: Text("Search For Bus "),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Searchedbus(
+                                  leaving: select_starting_tcity.toString(),
+                                  destination:
+                                      select_destination_tcity.toString(),
+                                  date: _dayName.toString())),
+                        );
+                      },
+                      child: Text("Search For Bus ",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: 20)),
+                    ),
                   ),
                 ),
               )
@@ -342,5 +391,4 @@ String a = '';
 void OnItemchangestratingcity(String? stratingcity) {
   a == stratingcity;
   print(stratingcity);
-
 }
