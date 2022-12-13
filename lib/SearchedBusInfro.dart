@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'package:busticketreservation/Controller/getxControllers.dart';
 import 'package:busticketreservation/ModelClasses/Businfomodel.dart';
 import 'package:busticketreservation/seat_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 
 class Searchedbus extends StatefulWidget {
@@ -25,6 +28,7 @@ class _SearchedbusState extends State<Searchedbus> {
     destination,
     date,
   );
+  final selectseat selectseatcontroller = Get.find();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,13 +133,21 @@ class _SearchedbusState extends State<Searchedbus> {
                                     Center(
                                         child: TextButton(
                                         onPressed: () {
-                                        Navigator.of(context)
+
+
+
+                                          selectseatcontroller.selectedseats.refresh();
+
+                                          Navigator.of(context)
                                             .push(MaterialPageRoute(
                                                 builder: (context) => seat_view(
                                                       id: snapshot
                                                           .data[Index].id
                                                           .toString(),
                                                     )));
+
+
+
 
                                         /*print(
                                             snapshot.data[Index].id.toString());*/

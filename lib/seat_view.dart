@@ -3,47 +3,33 @@ import 'dart:io';
 import 'package:busticketreservation/Controller/getxControllers.dart';
 import 'package:busticketreservation/ModelClasses/Bus_Seat_Info.dart';
 import 'package:busticketreservation/ModelClasses/sear_reserveatiomodel.dart';
-
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-
 import 'package:device_info_plus/device_info_plus.dart';
 
-class seat_view extends StatefulWidget {
+class seat_view extends StatelessWidget {
   final String id;
-  const seat_view({Key? key, required this.id}) : super(key: key);
-  @override
-  _seat_viewState createState() => _seat_viewState(id);
-}
-
-class _seat_viewState extends State<seat_view> {
-  bool isActive = true;
-  int? selectedIndex;
-
-  _seat_viewState(id);
+  seat_view({Key? key, required this.id}) : super(key: key);
   int alphabetCounter = -1;
-
   int a = 0;
   var d;
-  List<String> Selectedseats = [];
-  final controller = Get.put((selectseat));
 
   var dip = seatreserve;
-
-  @override
-  void setState(VoidCallback fn) {
-    a = 0;
-
-    super.setState(fn);
-  }
+  final selectseat selectseatcontroller = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("widget.title"),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            selectseatcontroller.selectedseats.clear();
+            Get.back();
+          },
+        ),
       ),
       body: Column(
         children: [
@@ -62,15 +48,13 @@ class _seat_viewState extends State<seat_view> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.fromLTRB(120, 8, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(120, 8, 0, 0),
                     child: Container(
                         height: 60,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                             //border: Border.all(color: Colors.grey, width: 10),
-
-                            image: new DecorationImage(
-                          image: new AssetImage(
-                              "lib/assets/images/Driverseat.jpg"),
+                            image: DecorationImage(
+                          image: AssetImage("lib/assets/images/Driverseat.jpg"),
                         ))),
                   ),
                   Container(
@@ -79,23 +63,23 @@ class _seat_viewState extends State<seat_view> {
                     child: Row(
                       children: [
                         Padding(
-                          padding: EdgeInsets.fromLTRB(60, 0, 0, 0),
+                          padding: const EdgeInsets.fromLTRB(60, 0, 0, 0),
                           child: Row(
                             children: [
                               ColorFiltered(
-                                  colorFilter: ColorFilter.mode(
+                                  colorFilter: const ColorFilter.mode(
                                       Colors.green, BlendMode.darken),
                                   child: Image.asset(
                                       "lib/assets/images/seat.png")),
                               Text("Reserved"),
                               ColorFiltered(
-                                  colorFilter: ColorFilter.mode(
+                                  colorFilter: const ColorFilter.mode(
                                       Colors.yellow, BlendMode.darken),
                                   child: Image.asset(
                                       "lib/assets/images/seat.png")),
                               Text("Confirmed"),
                               ColorFiltered(
-                                  colorFilter: ColorFilter.mode(
+                                  colorFilter: const ColorFilter.mode(
                                       Colors.white, BlendMode.darken),
                                   child: Image.asset(
                                       "lib/assets/images/seat.png")),
@@ -108,14 +92,14 @@ class _seat_viewState extends State<seat_view> {
                   ),
                   Container(
                     height: 450,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         //border: Border.all(color: Colors.grey, width: 10),
 
                         ),
                     child: FutureBuilder(
-                      future: Buildseatinfo(widget.id),
+                      future: Buildseatinfo(id),
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        print(widget.id.toString());
+                        print(id.toString());
 
                         if (snapshot.data == null) {
                           return Center(
@@ -146,6 +130,10 @@ class _seat_viewState extends State<seat_view> {
                                                   (String.fromCharCode(
                                                           65 + alphabetCounter)
                                                       .toString());
+
+                                              selectseatcontroller.booketseats
+                                                  .assign(snapshot
+                                                      .data[Index].seat_name);
 
                                               return Wrap(
                                                 children: [
@@ -216,96 +204,117 @@ class _seat_viewState extends State<seat_view> {
                                                             const EdgeInsets
                                                                 .all(4.0),
                                                         child: InkWell(
-                                                          onTap: () {
-
-
-
-                                                            if (!(Rownum+d).contains(snapshot.data[Index].seat_name)){
-                                                              Selectedseats.add( Rownum+d);
-
-                                                              print(Selectedseats);
-
-                                                            }
-
-
-
-
-
-
-
-/*
-
-
-                                                             if(Selectedseats.contains(snapshot
-                                                                 .data[Index]
-                                                                 .seat_name.toString()))
-                                                             {
-                                                               Selectedseats.remove(snapshot
-                                                                   .data[Index]
-                                                                   .seat_name.toString());
-                                                              print(Selectedseats);
-                                                             }
-
-*/
-
-
-
-
-
-
-
-
-                                                            }
-                                                          ,
-                                                          child: Container(
-                                                              height: 35,
-                                                              width: 35,
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: snapshot
+                                                            onTap: () {
+                                                              if (snapshot
+                                                                  .data[Index]
+                                                                  .seat_name
+                                                                  .toString()
+                                                                  .contains(
+                                                                      Rownum +
+                                                                          d)) {
+                                                                Scaffold.of(
+                                                                        context)
+                                                                    .showSnackBar(
+                                                                        SnackBar(
+                                                                  content: Text(
+                                                                      "This seat is Not Avilable"),
+                                                                  duration:
+                                                                      Duration(
+                                                                          seconds:
+                                                                              2),
+                                                                ));
+                                                              } else {
+                                                                if (selectseatcontroller
+                                                                        .selectedseats
+                                                                        .contains(
+                                                                            Rownum +
+                                                                                d) ||
+                                                                    snapshot
                                                                         .data[
                                                                             Index]
                                                                         .seat_name
                                                                         .toString()
-                                                                        .contains(String.fromCharCode(65 + alphabetCounter).toString() +
-                                                                            (a)
-                                                                                .toString())
-                                                                    ? Colors
-                                                                        .blueGrey
-                                                                    : Colors
-                                                                        .greenAccent,
+                                                                        .contains(Rownum +
+                                                                            d) ||
+                                                                    (selectseatcontroller
+                                                                            .selectedseats
+                                                                            .length >=
+                                                                        4)) {
+                                                                  if ((selectseatcontroller
+                                                                          .selectedseats
+                                                                          .length >=
+                                                                      4)) {
+                                                                    Scaffold.of(
+                                                                            context)
+                                                                        .showSnackBar(
+                                                                            SnackBar(
+                                                                      content: Text(
+                                                                          "You cant Reserve more than 4 seats"),
+                                                                      duration: Duration(
+                                                                          seconds:
+                                                                              2),
+                                                                    ));
+                                                                  }
 
-                                                                image:
-                                                                    new DecorationImage(
-                                                                  image: new AssetImage(
-                                                                      "lib/assets/images/seat.png"),
-                                                                  fit: BoxFit
-                                                                      .fill,
-                                                                ),
+                                                                  selectseatcontroller
+                                                                      .selectedseats
+                                                                      .remove(
+                                                                          Rownum +
+                                                                              d);
+                                                                } else {
+                                                                  selectseatcontroller
+                                                                      .selectedseats
+                                                                      .add(Rownum +
+                                                                          d);
+                                                                  addtopost(id);
+                                                                }
+                                                              }
+                                                            },
+                                                            child: Obx(
+                                                              () => Container(
+                                                                  height: 35,
+                                                                  width: 35,
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10),
+                                                                    color: selectseatcontroller
+                                                                            .booketseats
+                                                                            .toString()
+                                                                            .contains(Rownum +
+                                                                                d)
+                                                                        ? Colors
+                                                                            .grey
+                                                                        : selectseatcontroller.selectedseats.contains(Rownum +
+                                                                                d)
+                                                                            ? Colors.blueAccent
+                                                                            : Colors.white,
+                                                                    image:
+                                                                        const DecorationImage(
+                                                                      image: AssetImage(
+                                                                          "lib/assets/images/seat.png"),
+                                                                      fit: BoxFit
+                                                                          .fill,
+                                                                    ),
 
-                                                                //borderRadius: BorderRadius.circular(10),
-                                                              ),
-                                                              child: Row(
-                                                                children: [
-                                                                  Padding(
-                                                                      padding:
-                                                                          const EdgeInsets.all(
+                                                                    //borderRadius: BorderRadius.circular(10),
+                                                                  ),
+                                                                  child: Row(
+                                                                    children: [
+                                                                      Padding(
+                                                                          padding: const EdgeInsets.all(
                                                                               8.0),
-                                                                      child:
-                                                                          Text(
-                                                                        " " +
-                                                                            String.fromCharCode(65 +
-                                                                                alphabetCounter) +
-                                                                            (a).toString(),
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                10,
-                                                                            fontWeight:
-                                                                                FontWeight.bold),
-                                                                      )),
-                                                                ],
-                                                              )),
-                                                        ));
+                                                                          child:
+                                                                              Text(
+                                                                            Rownum +
+                                                                                d,
+                                                                            style:
+                                                                                const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                                                                          )),
+                                                                    ],
+                                                                  )),
+                                                            )));
                                                   })
                                                 ],
                                               );
@@ -324,7 +333,8 @@ class _seat_viewState extends State<seat_view> {
             ),
           ),
           Container(
-            child: Text("Dip"),
+            child:
+                Obx(() => Text(selectseatcontroller.selectedseats.toString())),
           )
         ],
       ),
@@ -341,17 +351,16 @@ class _seat_viewState extends State<seat_view> {
     } else if (Platform.isAndroid) {
       var androidDeviceInfo = await deviceInfo.androidInfo;
       deviceId = androidDeviceInfo.id!;
-      print(deviceId + "ASD");
     } else {
       deviceId = 'null';
     }
-
-    seatreserve SealectSeat = seatreserve(
-        Businfo: id,
-        setquantity: Selectedseats.length.toString(),
+    seatreserve Seatreserve = seatreserve(
+        BusinfoID: id,
+        setquantity: selectseatcontroller.selectedseats.length.toString(),
         devicetoken: deviceId,
-        seatnumbers: Selectedseats);
-    print(SealectSeat.toJson());
+        selectseat: selectseatcontroller.selectedseats);
+
+    print(Seatreserve.toJson());
   }
 }
 
@@ -368,4 +377,8 @@ Future<List<seatinfo>> Buildseatinfo(String busid) async {
           .toLowerCase()
           .contains(busid.toString().toLowerCase()))
       .toList();
+}
+
+addcolor(Colors) {
+  return Colors;
 }

@@ -1,7 +1,10 @@
 import 'dart:ui';
+import 'package:busticketreservation/Controller/getxControllers.dart';
 import 'package:busticketreservation/SearchedBusInfro.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 
 void main() {
@@ -13,7 +16,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    Get.lazyPut(()=>selectseat());
+
+    return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,

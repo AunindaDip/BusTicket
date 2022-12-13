@@ -7,10 +7,11 @@ import 'package:get_storage/get_storage.dart';
 
 class selectseat extends GetxController
 {
- var selectedseats = List<seatreserve>.empty(growable: true).toList().obs;
+ RxList selectedseats =[].obs;
+ RxList  booketseats=[].obs;
+
  var box = GetStorage();
 
 
- Savedata() => {box.write('My_Seat_Key', jsonEncode(selectedseats))};
 
 }
