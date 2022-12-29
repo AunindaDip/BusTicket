@@ -3,12 +3,30 @@ import 'package:busticketreservation/Controller/getxControllers.dart';
 import 'package:busticketreservation/SearchedBusInfro.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 
 void main() {
   runApp(const MyApp());
+  configLoading();
+}
+void configLoading() {
+  EasyLoading.instance
+    ..displayDuration = const Duration(milliseconds: 2000)
+    ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+    ..loadingStyle = EasyLoadingStyle.dark
+    ..indicatorSize = 45.0
+    ..radius = 10.0
+    ..progressColor = Colors.yellow
+    ..backgroundColor = Colors.green
+    ..indicatorColor = Colors.yellow
+    ..textColor = Colors.yellow
+    ..maskColor = Colors.blue.withOpacity(0.5)
+    ..userInteractions = true
+    ..dismissOnTap = false;
+
 }
 
 class MyApp extends StatelessWidget {
@@ -20,6 +38,7 @@ class MyApp extends StatelessWidget {
 
     return GetMaterialApp(
       title: 'Flutter Demo',
+      builder: EasyLoading.init(),
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -48,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Colors.green,
         centerTitle: true,
-        title: Text(
+        title: const Text(
           "BTRS",
           textAlign: TextAlign.center,
         ),
@@ -61,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(
                 height: 5,
               ),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.all(5.0),
                 child: Text(
                   'Search and Buy Bus Ticket',
@@ -98,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 4),
                           child: Theme(
                             data: ThemeData(
-                              textTheme: TextTheme(
+                              textTheme: const TextTheme(
                                   subtitle1: TextStyle(
                                       color: Colors.green,
                                       fontSize: 20,
@@ -109,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 showSearchBox: true,
                                 items: citesofbd,
                                 showSelectedItems: false,
-                                dropdownSearchDecoration: InputDecoration(
+                                dropdownSearchDecoration: const InputDecoration(
                                   labelText: "From",
                                   labelStyle: TextStyle(
                                       color: Colors.black,
@@ -124,21 +143,21 @@ class _MyHomePageState extends State<MyHomePage> {
                                   });
                                 },
                                 selectedItem: select_starting_tcity,
-                                searchFieldProps: TextFieldProps(
+                                searchFieldProps: const TextFieldProps(
                                   cursorColor: Colors.tealAccent,
                                 )),
                           ),
                         ),
                         Row(
                           children: [
-                            SizedBox(
+                            const SizedBox(
                                 height: 10,
                                 child: Padding(
-                                  padding: const EdgeInsets.fromLTRB(
+                                  padding: EdgeInsets.fromLTRB(
                                       20.0, 20.0, 20.0, 4),
                                   child: (Icon(Icons.thumbs_up_down)),
                                 )),
-                            SizedBox(width: 4),
+                            const SizedBox(width: 4),
                             Center(
                               child: SizedBox(
                                   height: 10,
@@ -156,7 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         SizedBox(height: 15),
                         Theme(
                           data: ThemeData(
-                            textTheme: TextTheme(
+                            textTheme: const TextTheme(
                                 subtitle1: TextStyle(
                                     color: Colors.green,
                                     fontSize: 20,
@@ -170,7 +189,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 showSearchBox: true,
                                 items: citesofbd,
                                 showSelectedItems: true,
-                                dropdownSearchDecoration: InputDecoration(
+                                dropdownSearchDecoration: const InputDecoration(
                                   labelText: "To",
                                   labelStyle: TextStyle(
                                       color: Colors.black,
@@ -180,12 +199,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                   hintText: "Select Your Destination  City",
                                 ),
                                 onChanged: (value) {
-                                  setState(() {
+                                  setState(()
+                                  {
                                     select_destination_tcity = value;
-                                  });
+                                  }
+                                  );
                                 },
                                 selectedItem: select_destination_tcity,
-                                searchFieldProps: TextFieldProps(
+                                searchFieldProps: const TextFieldProps(
                                   cursorColor: Colors.tealAccent,
                                 )),
                           ),
@@ -195,7 +216,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Padding(
@@ -216,9 +237,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     child: Column(
                       children: <Widget>[
-                        Padding(
+                        const Padding(
                           padding:
-                              const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 2),
+                              EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 2),
                           child: Text(
                             "Please Select Your Journey Date ",
                             style: TextStyle(
@@ -231,10 +252,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           padding:
                               const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20),
                           child: Text(
-                            _dateTime == null
-                                ? "Please Select Your Journey Date "
-                                : _dateTime,
-                            style: TextStyle(
+                            _dateTime ,
+                            style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.green,
                                 fontSize: 20),
@@ -265,7 +284,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   });
                                 });
                               },
-                              child: Text("Change date",
+                              child: const Text("Change date",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black,
@@ -278,7 +297,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               SizedBox(
@@ -308,10 +327,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                   leaving: select_starting_tcity.toString(),
                                   destination:
                                       select_destination_tcity.toString(),
+                                  TripDaTe:_dateTime,
                                   date: _dayName.toString())),
+
+
+
                         );
                       },
-                      child: Text("Search For Bus ",
+                      child: const Text("Search For Bus ",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.black,

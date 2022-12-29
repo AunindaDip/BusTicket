@@ -9,17 +9,18 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 
 class Searchedbus extends StatefulWidget {
-  final String leaving, destination, date;
+  final String leaving, destination, date,TripDaTe;
 
   const Searchedbus(
       {Key? key,
       required this.leaving,
       required this.destination,
-      required this.date})
+      required this.date,
+        required this.TripDaTe})
       : super(key: key);
   @override
   _SearchedbusState createState() =>
-      _SearchedbusState(leaving, destination, date);
+      _SearchedbusState(leaving, destination, date,TripDaTe);
 }
 
 class _SearchedbusState extends State<Searchedbus> {
@@ -27,6 +28,7 @@ class _SearchedbusState extends State<Searchedbus> {
     leaving,
     destination,
     date,
+      forticket
   );
   final selectseat selectseatcontroller = Get.find();
   @override
@@ -35,7 +37,7 @@ class _SearchedbusState extends State<Searchedbus> {
       appBar: AppBar(
         backgroundColor: Colors.green,
         centerTitle: true,
-        title: Text(
+        title: const Text(
           "BTRS",
           textAlign: TextAlign.center,
         ),
@@ -45,10 +47,8 @@ class _SearchedbusState extends State<Searchedbus> {
           future: fetchbusinfo(widget.leaving, widget.destination, widget.date),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.data == null) {
-              print(widget.leaving.toString().toLowerCase() +
-                  widget.destination.toString() +
-                  widget.date.toString() +
-                  "Doo");
+              print(
+                  "${widget.leaving.toString().toLowerCase()}${widget.destination}${widget.date}Doo");
               return Center(
                   child: Container(
                 child: Text("dip"),
@@ -58,10 +58,8 @@ class _SearchedbusState extends State<Searchedbus> {
               return ListView.builder(
                   itemCount: snapshot.data.length,
                   itemBuilder: (BuildContext context, int Index) {
-                    print(widget.leaving.toString().toLowerCase() +
-                        widget.destination.toString() +
-                        widget.date.toString() +
-                        "Dip");
+                    print("${widget.leaving.toString().toLowerCase()}"
+                        "${widget.destination}${widget.date}Dip");
 
                     print(snapshot.hasData.toString());
                     return Row(
@@ -82,16 +80,34 @@ class _SearchedbusState extends State<Searchedbus> {
                               ],
                             ),
                             child: Column(children: [
-                              Row(
-                                children: [
+                              Center(
+                                child:
                                   Padding(
                                     padding: const EdgeInsets.fromLTRB(
                                         8.0, 8.0, 8.0, 2),
                                     child: Text(
                                       snapshot.data[Index].name,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.black,
-                                        fontSize: 20,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+
+
+
+                              ),
+                              Row(
+                                children: [
+                                   Padding(
+                                    padding:
+                                        EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 2),
+                                    child: Text(
+                                      "Ticket Price : " + snapshot.data[Index].fare+ " Tk.",
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -101,14 +117,15 @@ class _SearchedbusState extends State<Searchedbus> {
                                     padding: const EdgeInsets.fromLTRB(
                                         8.0, 8.0, 8.0, 2),
                                     child: Text(
-                                      snapshot.data[Index].fare,
-                                      style: TextStyle(
+                                      "Available Seats : " +
+                                      snapshot.data[Index].seatcapacity,
+                                      style: const TextStyle(
                                         color: Colors.black,
-                                        fontSize: 20,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  ),
+                                  )
                                 ],
                               ),
                               Row(
@@ -116,14 +133,29 @@ class _SearchedbusState extends State<Searchedbus> {
                                   Padding(
                                     padding: const EdgeInsets.fromLTRB(
                                         8.0, 8.0, 8.0, 2),
-                                    child: Text("Available Seates"),
+                                    child: Text(
+                                      "Departure Day : " +
+                                          snapshot.data[Index].day,
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   ),
-                                  Spacer(),
+                                   Spacer(),
                                   Padding(
                                     padding: const EdgeInsets.fromLTRB(
                                         8.0, 8.0, 8.0, 2),
-                                    child:
-                                        Text(snapshot.data[Index].seatcapacity),
+                                    child: Text(
+                                      "Departure Time : " +
+                                          snapshot.data[Index].departureTime,
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   )
                                 ],
                               ),
@@ -132,27 +164,38 @@ class _SearchedbusState extends State<Searchedbus> {
                                   children: [
                                     Center(
                                         child: TextButton(
-                                        onPressed: () {
+                                      onPressed: () {
+                                        selectseatcontroller.selectedseats =
+                                            [].obs;
+                                        selectseatcontroller.totalcoast =
+                                            0.0.obs;
 
-
-
-                                          selectseatcontroller.selectedseats.refresh();
-
-                                          Navigator.of(context)
+                                        Navigator.of(context)
                                             .push(MaterialPageRoute(
                                                 builder: (context) => seat_view(
                                                       id: snapshot
                                                           .data[Index].id
                                                           .toString(),
+                                                  fare: snapshot
+                                                      .data[Index].fare,
+                                                  Busleavingday: snapshot
+                                                          .data[Index].day.toString(),
+
+                                                  departure:widget.leaving,
+                                                  destination:widget.destination,
+                                                  BusName:snapshot
+                                                      .data[Index].name,
+                                                  deaprtureTime:snapshot
+                                                      .data[Index].departureTime,
+                                                    TripDaTe:widget.TripDaTe.toString(),
+
+
                                                     )));
 
-
-
-
-                                        /*print(
-                                            snapshot.data[Index].id.toString());*/
+                                        print(snapshot.data[Index].day
+                                            .toString());
                                       },
-                                      child: Text("View Seats"),
+                                      child: const Text("View Seats"),
                                     ))
                                   ],
                                 ),
@@ -165,9 +208,10 @@ class _SearchedbusState extends State<Searchedbus> {
                   });
             } else {
               return Center(
-                  child: Container(
-                child: Text("saha"),
-              ));
+                child: Container(
+                  child: Text("saha"),
+                ),
+              );
             }
           },
         ),

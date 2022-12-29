@@ -1,6 +1,4 @@
-import 'package:busticketreservation/Controller/getxControllers.dart';
-import 'package:busticketreservation/Controller/getxControllers.dart';
-import 'package:busticketreservation/Controller/getxControllers.dart';
+
 import 'package:get/get.dart';
 
 class seatreserve {

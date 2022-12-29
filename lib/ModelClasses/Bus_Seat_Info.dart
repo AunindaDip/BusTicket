@@ -29,15 +29,6 @@ class seatinfo {
     return data;
   }
 }
-/*parameters:
-id
-businfo_id
-seat_name
-boarding_point
-seat_fare
-bus_journey_date
-status
-demo_user_id*/
 
 
 

@@ -10,6 +10,9 @@ class selectseat extends GetxController
  RxList selectedseats =[].obs;
  RxList  booketseats=[].obs;
 
+  RxDouble totalcoast=0.0.obs ;
+  RxString ReserVationdate=''.obs;
+
  var box = GetStorage();
 
 
