@@ -1,17 +1,22 @@
 import 'dart:ui';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:busticketreservation/Controller/getxControllers.dart';
+import 'package:busticketreservation/Search_Ticket/Search_Ticket.dart';
 import 'package:busticketreservation/SearchedBusInfro.dart';
+import 'package:busticketreservation/main.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
+import 'topofNavigationbar.dart';
 
 void main() {
   runApp(const MyApp());
   configLoading();
 }
+
 void configLoading() {
   EasyLoading.instance
     ..displayDuration = const Duration(milliseconds: 2000)
@@ -26,7 +31,6 @@ void configLoading() {
     ..maskColor = Colors.blue.withOpacity(0.5)
     ..userInteractions = true
     ..dismissOnTap = false;
-
 }
 
 class MyApp extends StatelessWidget {
@@ -34,7 +38,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.lazyPut(()=>selectseat());
+    Get.lazyPut(() => selectseat());
 
     return GetMaterialApp(
       title: 'Flutter Demo',
@@ -42,7 +46,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: AnimatedSplashScreen(
+          duration: 4500,
+          splash: Icons.bus_alert_outlined,
+          backgroundColor: Colors.green,
+          splashTransition: SplashTransition.slideTransition,
+          nextScreen: const MyHomePage(title: "Btrs")),
+
+      /*const MyHomePage(title: 'Flutter Demo Home Page'),*/
     );
   }
 }
@@ -58,8 +69,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String _dateTime = DateFormat.yMMMMd('en_US').format(DateTime.now());
   String? select_starting_tcity;
-  String _dayName = DateFormat('EEEE', 'en_US').format(DateTime.now());
   String? select_destination_tcity;
+  String _dayName = DateFormat('EEEE', 'en_US').format(DateTime.now());
 
   @override
   Widget build(BuildContext context) {
@@ -94,127 +105,124 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(
                 height: 5,
               ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.320,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white,
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.blueGrey,
-                          offset: Offset(5.0, 5.0), //(x,y)
-                          blurRadius: 8.0,
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 4),
-                          child: Theme(
-                            data: ThemeData(
-                              textTheme: const TextTheme(
-                                  subtitle1: TextStyle(
-                                      color: Colors.green,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold)),
-                            ),
-                            child: DropdownSearch<String>(
-                                mode: Mode.DIALOG,
-                                showSearchBox: true,
-                                items: citesofbd,
-                                showSelectedItems: false,
-                                dropdownSearchDecoration: const InputDecoration(
-                                  labelText: "From",
-                                  labelStyle: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20),
-                                  suffixIcon: Icon(Icons.shop),
-                                  hintText: "Select Your Starting City",
-                                ),
-                                onChanged: (value) {
-                                  setState(() {
-                                    select_starting_tcity = value;
-                                  });
-                                },
-                                selectedItem: select_starting_tcity,
-                                searchFieldProps: const TextFieldProps(
-                                  cursorColor: Colors.tealAccent,
-                                )),
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            const SizedBox(
-                                height: 10,
-                                child: Padding(
-                                  padding: EdgeInsets.fromLTRB(
-                                      20.0, 20.0, 20.0, 4),
-                                  child: (Icon(Icons.thumbs_up_down)),
-                                )),
-                            const SizedBox(width: 4),
-                            Center(
-                              child: SizedBox(
-                                  height: 10,
-                                  width: 50,
-                                  child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          20.0, 20.0, 20.0, 20),
-                                      child: Image.asset(
-                                        "lib/assets/images/dip.jpg",
-                                        fit: BoxFit.fitWidth,
-                                      ))),
+              LayoutBuilder(
+                builder:  (BuildContext context, BoxConstraints constraints){
+                  return
+         SingleChildScrollView(
+           child: SizedBox(
+
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white,
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.blueGrey,
+                              offset: Offset(5.0, 5.0), //(x,y)
+                              blurRadius: 8.0,
                             ),
                           ],
                         ),
-                        SizedBox(height: 15),
-                        Theme(
-                          data: ThemeData(
-                            textTheme: const TextTheme(
-                                subtitle1: TextStyle(
-                                    color: Colors.green,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold)),
-                          ),
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20),
-                            child: DropdownSearch<String>(
-                                mode: Mode.DIALOG,
-                                showSearchBox: true,
-                                items: citesofbd,
-                                showSelectedItems: true,
-                                dropdownSearchDecoration: const InputDecoration(
-                                  labelText: "To",
-                                  labelStyle: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20),
-                                  suffixIcon: Icon(Icons.shop),
-                                  hintText: "Select Your Destination  City",
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 4),
+                              child: Theme(
+                                data: ThemeData(
+                                  textTheme: const TextTheme(
+                                      subtitle1: TextStyle(
+                                          color: Colors.green,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold)),
                                 ),
-                                onChanged: (value) {
-                                  setState(()
-                                  {
-                                    select_destination_tcity = value;
-                                  }
-                                  );
-                                },
-                                selectedItem: select_destination_tcity,
-                                searchFieldProps: const TextFieldProps(
-                                  cursorColor: Colors.tealAccent,
-                                )),
-                          ),
+                                child: DropdownSearch<String>(
+                                    mode: Mode.DIALOG,
+                                    showSearchBox: true,
+                                    items: citesofbd,
+                                    showSelectedItems: false,
+                                    popupItemDisabled: (String s) =>
+                                        s == select_destination_tcity,
+                                    dropdownSearchDecoration: const InputDecoration(
+                                      labelText: "From",
+                                      labelStyle: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20),
+                                      suffixIcon: Icon(Icons.shop),
+                                      hintText: "Select Your Starting City",
+                                    ),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        select_starting_tcity = value;
+                                      });
+                                    },
+                                    selectedItem: select_starting_tcity,
+                                    searchFieldProps: const TextFieldProps(
+                                      cursorColor: Colors.tealAccent,
+                                    )),
+                              ),
+                            ),
+                            Row(
+                              children: const [
+                                SizedBox(
+                                    height: 10,
+                                    child: Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 4),
+                                      child: (Icon(Icons.thumbs_up_down)),
+                                    )),
+                                SizedBox(width: 4),
+                              ],
+                            ),
+                            SizedBox(height: 15),
+                            Theme(
+                              data: ThemeData(
+                                textTheme: const TextTheme(
+                                    subtitle1: TextStyle(
+                                        color: Colors.green,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold)),
+                              ),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20),
+                                child: DropdownSearch<String>(
+                                    mode: Mode.DIALOG,
+                                    showSearchBox: true,
+                                    items: citesofbd,
+                                    showSelectedItems: true,
+                                    popupItemDisabled: (String s) =>
+                                        s == select_starting_tcity,
+                                    dropdownSearchDecoration: const InputDecoration(
+                                      labelText: "To",
+                                      labelStyle: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20),
+                                      suffixIcon: Icon(Icons.shop),
+                                      hintText: "Select Your Destination  City",
+                                    ),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        select_destination_tcity = value;
+                                      });
+                                    },
+                                    selectedItem: select_destination_tcity,
+                                    searchFieldProps: const TextFieldProps(
+                                      cursorColor: Colors.tealAccent,
+                                    )),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
+         );
+                  },
               ),
               const SizedBox(
                 height: 20,
@@ -222,7 +230,6 @@ class _MyHomePageState extends State<MyHomePage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SizedBox(
-                  height: 200,
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
@@ -238,8 +245,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Column(
                       children: <Widget>[
                         const Padding(
-                          padding:
-                              EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 2),
+                          padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 2),
                           child: Text(
                             "Please Select Your Journey Date ",
                             style: TextStyle(
@@ -252,7 +258,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           padding:
                               const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20),
                           child: Text(
-                            _dateTime ,
+                            _dateTime,
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.green,
@@ -319,20 +325,28 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     child: TextButton(
                       onPressed: () {
-
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Searchedbus(
-                                  leaving: select_starting_tcity.toString(),
-                                  destination:
-                                      select_destination_tcity.toString(),
-                                  TripDaTe:_dateTime,
-                                  date: _dayName.toString())),
-
-
-
-                        );
+                        if (select_starting_tcity == null ||
+                            select_starting_tcity.toString().isEmpty ||
+                            select_destination_tcity == null ||
+                            select_destination_tcity.toString().isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text(
+                                      'Your destination or Staring city is empty'),
+                                  duration: Duration(milliseconds: 1000)));
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Searchedbus(
+                                    leaving: select_starting_tcity.toString(),
+                                    destination:
+                                        select_destination_tcity.toString(),
+                                    TripDaTe: _dateTime,
+                                    date: _dayName.toString())),
+                          );
+                          // Proceed with the journey
+                        }
                       },
                       child: const Text("Search For Bus ",
                           style: TextStyle(
@@ -345,7 +359,29 @@ class _MyHomePageState extends State<MyHomePage> {
               )
             ])),
       ),
+      drawer: Drawer(
+        child: SingleChildScrollView(
+          child: Container(
+            child: Column(
+              children: [
+                myprofildrwaer(),
+                myDrwaerlist(),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
+  }
+
+  String a = '';
+  void OnItemchangestratingcity(String stratingcity) {
+    if (stratingcity == select_destination_tcity) {
+      // Display an error message or prevent the selection from being made
+    } else {
+      a = stratingcity;
+      print(stratingcity);
+    }
   }
 }
 
@@ -415,8 +451,65 @@ List<String> citesofbd = [
   "Narail",
   "Satkhira",
 ];
-String a = '';
-void OnItemchangestratingcity(String? stratingcity) {
-  a == stratingcity;
-  print(stratingcity);
+
+myDrwaerlist() {
+  return Container(
+    padding: EdgeInsets.all(10),
+    child: Column(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextButton.icon(
+          icon: Icon(
+            Icons.star_border_sharp,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            Get.to(searchticket());
+          },
+          label: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                "Search Ticket ",
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 5,
+        ),
+        TextButton.icon(
+            icon: Icon(
+              Icons.animation,
+              color: Colors.black,
+            ),
+            onPressed: () {},
+            label: const Text(
+              "Contact Us",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  fontSize: 16),
+            )),
+        TextButton.icon(
+          icon: Icon(
+            Icons.shopping_cart,
+            color: Colors.black,
+          ),
+          onPressed: () {},
+          label: const Text(
+            "About us",
+            style: TextStyle(
+                fontWeight: FontWeight.bold, color: Colors.black, fontSize: 16),
+          ),
+        ),
+      ],
+    ),
+  );
 }

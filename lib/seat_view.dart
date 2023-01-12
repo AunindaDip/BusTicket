@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:busticketreservation/Controller/getxControllers.dart';
 import 'package:busticketreservation/ModelClasses/Bus_Seat_Info.dart';
 import 'package:busticketreservation/ModelClasses/sear_reserveatiomodel.dart';
@@ -51,21 +50,14 @@ class _seat_viewState extends State<seat_view> {
   var dip = seatreserve;
   String _dateTimebuyingTicke = DateFormat('yyyy-MM-dd').format(DateTime.now());
   final selectseat selectseatcontroller = Get.find();
-  var  Randomid;
-
-
+  var Randomid;
 
   @override
   Widget build(BuildContext context) {
-
     setState(() {
+      const uuid = Uuid();
 
-
-        const uuid= Uuid();
-
-        Randomid = Uuid().v1();
-
-
+      Randomid = Uuid().v1();
     });
 
     return Scaffold(
@@ -172,12 +164,12 @@ class _seat_viewState extends State<seat_view> {
                               future: Buildseatinfo(widget.id),
                               builder: (BuildContext context,
                                   AsyncSnapshot snapshot) {
-                                if (snapshot.data == null) {
-                                  return Center(
-                                      child: Container(
-                                    child: const Text("dip"),
-                                  ));
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const Center(
+                                      child: CircularProgressIndicator());
                                 }
+
                                 if (snapshot.hasData) {
                                   return ListView.builder(
                                       itemCount: snapshot.data.length,
@@ -293,7 +285,6 @@ class _seat_viewState extends State<seat_view> {
                                                                     onTap: () {
                                                                       /*    print(selectseatcontroller
                                                                           .totalcoast)*/
-                                                                      ;
 
                                                                       if (snapshot
                                                                           .data[
@@ -320,8 +311,6 @@ class _seat_viewState extends State<seat_view> {
                                                                               .remove(Rownum + viewSeatnumber);
                                                                           selectseatcontroller.totalcoast =
                                                                               double.parse((selectseatcontroller.selectedseats.length * double.parse(widget.fare)).toString()).obs;
-                                                                          print(
-                                                                              selectseatcontroller.totalcoast);
 
                                                                           if ((selectseatcontroller.selectedseats.length >=
                                                                               4)) {
@@ -332,7 +321,8 @@ class _seat_viewState extends State<seat_view> {
                                                                           }
                                                                         } else {
                                                                           selectseatcontroller
-                                                                              .selectedseats.add(Rownum + viewSeatnumber);
+                                                                              .selectedseats
+                                                                              .add(Rownum + viewSeatnumber);
 
                                                                           selectseatcontroller.totalcoast =
                                                                               double.parse((selectseatcontroller.selectedseats.length * double.parse(widget.fare)).toString()).obs;
@@ -485,6 +475,7 @@ class _seat_viewState extends State<seat_view> {
                               showSearchBox: true,
                               items: Listofboarding_points,
                               showSelectedItems: false,
+
                               dropdownSearchDecoration: const InputDecoration(
                                 labelText: "Select Boarding Point ",
                                 labelStyle: TextStyle(
@@ -493,12 +484,16 @@ class _seat_viewState extends State<seat_view> {
                                     fontSize: 15),
                                 suffixIcon: Icon(Icons.shop),
                                 hintText: "Select Your Starting City",
+
+
                               ),
                               onChanged: (value) async {
                                 setState(() {
                                   select_bording_Point = value;
                                 });
                               },
+
+
                               selectedItem: select_bording_Point,
                               searchFieldProps: const TextFieldProps(
                                 cursorColor: Colors.tealAccent,
@@ -509,16 +504,33 @@ class _seat_viewState extends State<seat_view> {
                         ),
                         ElevatedButton(
                             onPressed: () {
-                              /* print(widget.date.toString());
-                          print (widget.fare);*/
+                              if (selectseatcontroller.selectedseats.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content:
+                                            Text("you dont picked any seats"),
+                                        duration:
+                                            Duration(milliseconds: 1000)));
+                              } else {
+                                print(select_bording_Point.toString());
 
-                              addtopost(
-                                  widget.id,
-                                  selectseatcontroller.selectedseats,
-                                  widget.fare,
-                                  select_bording_Point.toString(),
-                                  _dateTimebuyingTicke,
-                                  Randomid);
+                                if (select_bording_Point.toString() == "null") {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              'please choose Your Boarding point'),
+                                          duration:
+                                              Duration(milliseconds: 1000)));
+                                } else {
+                                  addtopost(
+                                      widget.id,
+                                      selectseatcontroller.selectedseats,
+                                      widget.fare,
+                                      select_bording_Point.toString(),
+                                      _dateTimebuyingTicke,
+                                      Randomid);
+                                }
+                              }
                             },
                             child: Text("next"))
                       ],
@@ -534,8 +546,7 @@ class _seat_viewState extends State<seat_view> {
   }
 
   Future<void> addtopost(id, RxList<dynamic> selectedseats, String fare,
-      String selectBordingPoint, String dateTimeOrder,
-      String randomid) async {
+      String selectBordingPoint, String dateTimeOrder, String randomid) async {
     var deviceInfo = DeviceInfoPlugin();
     late String deviceId;
 
@@ -557,10 +568,9 @@ class _seat_viewState extends State<seat_view> {
         seat_fare: fare,
         selectseat: selectedseats);
 
-    print(Seatreserve.toJson());
+
 
     var url = Uri.parse("https://btrs.ticket.symbexit.com/api/booked_seats");
-    print(Seatreserve.toJson());
 
     EasyLoading.show(status: "sending..");
     var response = await http.post(
@@ -573,6 +583,7 @@ class _seat_viewState extends State<seat_view> {
       EasyLoading.showSuccess("Your Order has ben placed ");
       print(randomid + "Reserved");
 
+      // ignore: use_build_context_synchronously
       Navigator.push(
         context,
         MaterialPageRoute(
