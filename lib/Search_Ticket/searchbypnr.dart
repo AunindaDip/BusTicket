@@ -72,6 +72,8 @@ class _searchbypnnrState extends State<searchbypnnr> {
                 else
                 {
                   Get.to(PnrTicketResults(pnr: pnrcontroller.text.toString(),));
+                  print(pnrcontroller.text.toString()+"dip saha");
+
                 }
 
 

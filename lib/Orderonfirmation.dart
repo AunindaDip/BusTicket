@@ -417,6 +417,8 @@ void Onlinepay(String payable, email, name, mobile, demoDevicID) async {
   }
   String otpString = otp.toString();
 
+
+
   Sslcommerz sslstart = Sslcommerz(
       initializer: SSLCommerzInitialization(
           ipn_url: "https://btrs.ticket.symbexit.com/api/ipn",
@@ -428,16 +430,54 @@ void Onlinepay(String payable, email, name, mobile, demoDevicID) async {
           product_category: "hello",
           sdkType: "SSLCSdkType.TESTBOX"));
 
-  var result = await sslstart.payNow();
-  if (result is PlatformException) {
-  } else {
-    SSLCTransactionInfoModel model = result;
 
 
-    palaceorder(name, mobile, email, result.cardType, result.tranId,
-        result.currencyType, payable, demoDevicID, result.status);
+  try {
+    SSLCTransactionInfoModel result = await sslstart.payNow();
+
+    if (result.status!.toLowerCase() == "failed") {
+
+
+      EasyLoading.showSuccess("Your Order  ");
+
+    } else {
+      palaceorder(name, mobile, email, result.cardType, result.tranId,
+          result.currencyType, payable, demoDevicID, result.status);
+    }
+  } catch (e) {
+    debugPrint(e.toString());
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void palaceorder(String name, mobile, email, cardtype, tranID, currencytype,
     payable, demoDevicID, status) async {

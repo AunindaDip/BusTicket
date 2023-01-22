@@ -293,13 +293,11 @@ class _seat_viewState extends State<seat_view> {
                                                                           .toString()
                                                                           .contains(Rownum +
                                                                               viewSeatnumber)) {
-                                                                        Scaffold.of(context)
-                                                                            .showSnackBar(const SnackBar(
-                                                                          content:
-                                                                              Text("This seat is Not Available"),
-                                                                          duration:
-                                                                              Duration(seconds: 1),
-                                                                        ));
+                                                                        ScaffoldMessenger.of(context).showSnackBar(
+                                                                            const SnackBar(
+                                                                                content: Text(
+                                                                                    'Not avaiable'),
+                                                                                duration: Duration(milliseconds: 1000)));
                                                                       } else {
                                                                         if (selectseatcontroller.selectedseats.contains(Rownum + viewSeatnumber) ||
                                                                             snapshot.data[Index].seat_name.toString().contains(Rownum +
@@ -314,10 +312,11 @@ class _seat_viewState extends State<seat_view> {
 
                                                                           if ((selectseatcontroller.selectedseats.length >=
                                                                               4)) {
-                                                                            Scaffold.of(context).showSnackBar(const SnackBar(
-                                                                              content: Text("You cant Reserve more than 4 seats"),
-                                                                              duration: Duration(milliseconds: 1000),
-                                                                            ));
+                                                                            ScaffoldMessenger.of(context).showSnackBar(
+                                                                                const SnackBar(
+                                                                                    content: Text(
+                                                                                        '4 seats'),
+                                                                                    duration: Duration(milliseconds: 1000)));
                                                                           }
                                                                         } else {
                                                                           selectseatcontroller
