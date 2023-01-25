@@ -10,27 +10,22 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 
 class Searchedbus extends StatefulWidget {
-  final String leaving, destination, date,TripDaTe;
+  final String leaving, destination, date, TripDaTe;
 
   const Searchedbus(
       {Key? key,
       required this.leaving,
       required this.destination,
       required this.date,
-        required this.TripDaTe})
+      required this.TripDaTe})
       : super(key: key);
   @override
   _SearchedbusState createState() =>
-      _SearchedbusState(leaving, destination, date,TripDaTe);
+      _SearchedbusState(leaving, destination, date, TripDaTe);
 }
 
 class _SearchedbusState extends State<Searchedbus> {
-  _SearchedbusState(
-    leaving,
-    destination,
-    date,
-      forticket
-  );
+  _SearchedbusState(leaving, destination, date, forticket);
   final selectseat selectseatcontroller = Get.find();
   @override
   Widget build(BuildContext context) {
@@ -45,33 +40,16 @@ class _SearchedbusState extends State<Searchedbus> {
       ),
       body: FutureBuilder(
         future: fetchbusinfo(widget.leaving, widget.destination, widget.date),
-        builder: (BuildContext context, AsyncSnapshot snapshot)
-        {
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-
-          if(snapshot.connectionState == ConnectionState.waiting)
-          {
-            return const
-            Center
-              (
-                child: CircularProgressIndicator()
+          if (snapshot.toString().contains("[]")) {
+            return Center(
+              child: Text("No Bus Available"),
             );
-
-
           }
-
-
-          if (snapshot.toString().contains("[]"))
-          {
-           return Center(
-             child: Text("No Bus Available"),
-             
-           );
-
-          }
-
-
-
 
           if (snapshot.hasData) {
             return ListView.builder(
@@ -96,26 +74,22 @@ class _SearchedbusState extends State<Searchedbus> {
                           ),
                           child: Column(children: [
                             Center(
-                              child:
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      8.0, 8.0, 8.0, 2),
-                                  child: Text(
-                                    snapshot.data[Index].name,
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 2),
+                                child: Text(
+                                  snapshot.data[Index].name,
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-
-
-
+                              ),
                             ),
                             Row(
                               children: [
-                                 Padding(
+                                Padding(
                                   padding:
                                       EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 2),
                                   child: Text(
@@ -133,7 +107,7 @@ class _SearchedbusState extends State<Searchedbus> {
                                       8.0, 8.0, 8.0, 2),
                                   child: Text(
                                     "Available Seats : " +
-                                    snapshot.data[Index].seatcapacity,
+                                        snapshot.data[Index].seatcapacity,
                                     style: const TextStyle(
                                       color: Colors.black,
                                       fontSize: 12,
@@ -158,7 +132,7 @@ class _SearchedbusState extends State<Searchedbus> {
                                     ),
                                   ),
                                 ),
-                                 const Spacer(),
+                                const Spacer(),
                                 Padding(
                                   padding: const EdgeInsets.fromLTRB(
                                       8.0, 8.0, 8.0, 2),
@@ -182,33 +156,30 @@ class _SearchedbusState extends State<Searchedbus> {
                                     onPressed: () {
                                       selectseatcontroller.selectedseats =
                                           [].obs;
-                                      selectseatcontroller.totalcoast =
-                                          0.0.obs;
+                                      selectseatcontroller.totalcoast = 0.0.obs;
 
                                       Navigator.of(context)
                                           .push(MaterialPageRoute(
                                               builder: (context) => seat_view(
-                                                    id: snapshot
-                                                        .data[Index].id
+                                                    id: snapshot.data[Index].id
                                                         .toString(),
-                                                fare: snapshot
-                                                    .data[Index].fare,
-                                                Busleavingday: snapshot
-                                                        .data[Index].day.toString(),
-
-                                                departure:widget.leaving,
-                                                destination:widget.destination,
-                                                BusName:snapshot
-                                                    .data[Index].name,
-                                                deaprtureTime:snapshot
-                                                    .data[Index].departureTime,
-                                                  TripDaTe:widget.TripDaTe.toString(),
-
-
+                                                    fare: snapshot
+                                                        .data[Index].fare,
+                                                    Busleavingday: snapshot
+                                                        .data[Index].day
+                                                        .toString(),
+                                                    departure: widget.leaving,
+                                                    destination:
+                                                        widget.destination,
+                                                    BusName: snapshot
+                                                        .data[Index].name,
+                                                    deaprtureTime: snapshot
+                                                        .data[Index]
+                                                        .departureTime,
+                                                    TripDaTe: widget.TripDaTe
+                                                        .toString(),
                                                   )));
 
-                                      print(snapshot.data[Index].day
-                                          .toString());
                                     },
                                     child: const Text("View Seats"),
                                   ))
@@ -220,9 +191,10 @@ class _SearchedbusState extends State<Searchedbus> {
                       ))
                     ],
                   );
-                });
+                }
+                );
           } else {
-             return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
         },
       ),
@@ -234,7 +206,6 @@ Future<List<businfomodel>> fetchbusinfo(String a, b, c) async {
   var url = Uri.parse("https://btrs.ticket.symbexit.com/api/getbusinfos");
   var data = await http.get(url);
   var jsonData = json.decode(data.body);
-  print(jsonData);
   final list = jsonData as List<dynamic>;
   return list
       .map((e) => businfomodel.fromJson(e))

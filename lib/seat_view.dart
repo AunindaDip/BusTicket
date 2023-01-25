@@ -160,8 +160,8 @@ class _seat_viewState extends State<seat_view> {
                                 //border: Border.all(color: Colors.grey, width: 10),
 
                                 ),
-                            child: FutureBuilder(
-                              future: Buildseatinfo(widget.id),
+                            child: StreamBuilder(
+                              stream: Buildseatinfo(widget.id),
                               builder: (BuildContext context,
                                   AsyncSnapshot snapshot) {
                                 if (snapshot.connectionState ==
@@ -283,8 +283,7 @@ class _seat_viewState extends State<seat_view> {
                                                                         4.0),
                                                                 child: InkWell(
                                                                     onTap: () {
-                                                                      /*    print(selectseatcontroller
-                                                                          .totalcoast)*/
+
 
                                                                       if (snapshot
                                                                           .data[
@@ -293,11 +292,10 @@ class _seat_viewState extends State<seat_view> {
                                                                           .toString()
                                                                           .contains(Rownum +
                                                                               viewSeatnumber)) {
-                                                                        ScaffoldMessenger.of(context).showSnackBar(
-                                                                            const SnackBar(
-                                                                                content: Text(
-                                                                                    'Not avaiable'),
-                                                                                duration: Duration(milliseconds: 1000)));
+                                                                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                                            content:
+                                                                                Text('Not avaiable'),
+                                                                            duration: Duration(milliseconds: 1000)));
                                                                       } else {
                                                                         if (selectseatcontroller.selectedseats.contains(Rownum + viewSeatnumber) ||
                                                                             snapshot.data[Index].seat_name.toString().contains(Rownum +
@@ -312,11 +310,9 @@ class _seat_viewState extends State<seat_view> {
 
                                                                           if ((selectseatcontroller.selectedseats.length >=
                                                                               4)) {
-                                                                            ScaffoldMessenger.of(context).showSnackBar(
-                                                                                const SnackBar(
-                                                                                    content: Text(
-                                                                                        '4 seats'),
-                                                                                    duration: Duration(milliseconds: 1000)));
+                                                                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                                                content: Text('4 seats'),
+                                                                                duration: Duration(milliseconds: 1000)));
                                                                           }
                                                                         } else {
                                                                           selectseatcontroller
@@ -474,7 +470,6 @@ class _seat_viewState extends State<seat_view> {
                               showSearchBox: true,
                               items: Listofboarding_points,
                               showSelectedItems: false,
-
                               dropdownSearchDecoration: const InputDecoration(
                                 labelText: "Select Boarding Point ",
                                 labelStyle: TextStyle(
@@ -483,16 +478,12 @@ class _seat_viewState extends State<seat_view> {
                                     fontSize: 15),
                                 suffixIcon: Icon(Icons.shop),
                                 hintText: "Select Your Starting City",
-
-
                               ),
                               onChanged: (value) async {
                                 setState(() {
                                   select_bording_Point = value;
                                 });
                               },
-
-
                               selectedItem: select_bording_Point,
                               searchFieldProps: const TextFieldProps(
                                 cursorColor: Colors.tealAccent,
@@ -511,7 +502,6 @@ class _seat_viewState extends State<seat_view> {
                                         duration:
                                             Duration(milliseconds: 1000)));
                               } else {
-                                print(select_bording_Point.toString());
 
                                 if (select_bording_Point.toString() == "null") {
                                   ScaffoldMessenger.of(context).showSnackBar(
@@ -567,8 +557,6 @@ class _seat_viewState extends State<seat_view> {
         seat_fare: fare,
         selectseat: selectedseats);
 
-
-
     var url = Uri.parse("https://btrs.ticket.symbexit.com/api/booked_seats");
 
     EasyLoading.show(status: "sending..");
@@ -580,7 +568,6 @@ class _seat_viewState extends State<seat_view> {
 
     if (response.statusCode == 200) {
       EasyLoading.showSuccess("Your Order has ben placed ");
-      print(randomid + "Reserved");
 
       // ignore: use_build_context_synchronously
       Navigator.push(
@@ -594,7 +581,8 @@ class _seat_viewState extends State<seat_view> {
                 DepartureTime: widget.deaprtureTime,
                 DepartureDay: widget.Busleavingday,
                 tripdate: widget.TripDaTe,
-                demoDevicID: randomid)),
+                demoDevicID: randomid)
+        ),
       );
     } else {
       EasyLoading.showError("Opps".toString());
@@ -602,23 +590,24 @@ class _seat_viewState extends State<seat_view> {
   }
 }
 
-Future<List<seatinfo>> Buildseatinfo(String busid) async {
+Stream<List<seatinfo>> Buildseatinfo(String busid) async* {
   var url = Uri.parse("http://btrs.ticket.symbexit.com/api/seat_status");
-  var data = await http.get(url);
-  var jsonData = json.decode(data.body);
-  print(jsonEncode(jsonData));
-  final list = jsonData as List<dynamic>;
-  return list
-      .map((e) => seatinfo.fromJson(e))
-      .where((element) => element.businfoId
-          .toString()
-          .toLowerCase()
-          .contains(busid.toString().toLowerCase()))
-      .toList();
+  var stop = false;
+  while (!stop) {
+    var data = await http.get(url);
+    var jsonData = json.decode(data.body);
+    final list = jsonData as List<dynamic>;
+    yield list.map((e) => seatinfo.fromJson(e))
+        .where((element) => element.businfoId
+        .toString()
+        .toLowerCase()
+        .contains(busid.toString().toLowerCase()))
+        .toList();
+    await Future.delayed(Duration(seconds: 5));
+  }
 }
-
 List<String> Listofboarding_points = [
   "Kallaynpur",
-  "Dhanmondi32",
+  "kalabagan",
   "Sydabad",
 ];

@@ -34,8 +34,7 @@ class Order_Confirmation extends StatefulWidget {
       required this.DepartureTime,
       required this.tripdate,
       required this.DepartureDay,
-      required this.demoDevicID}
-      )
+      required this.demoDevicID})
       : super(key: key);
 
   @override
@@ -60,44 +59,35 @@ class _Order_ConfirmationState extends State<Order_Confirmation> {
 
   final selectseat selectseatcontroller = Get.find();
 
-
-
-
-
   Future<bool?> showWarnig(BuildContext context) async => showDialog<bool>(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: const Text("if you leave the page your booked ticket will be lost "),
-      actions: [
-        ElevatedButton(
-          child: const Text("No"),
-          onPressed: () => Navigator.pop(context, false),
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text(
+              "if you leave the page your booked ticket will be lost "),
+          actions: [
+            ElevatedButton(
+              child: const Text("No"),
+              onPressed: () => Navigator.pop(context, false),
+            ),
+            ElevatedButton(
+              child: const Text("Yes"),
+              onPressed: () => Get.offAll(const MyHomePage(
+                title: 'Dip',
+              )),
+            ),
+          ],
         ),
-        ElevatedButton(
-          child: const Text("Yes"),
-          onPressed: () =>  Get.offAll(const MyHomePage(
-            title: 'Dip',
-          )),
-        ),
-      ],
-    ),
-  );
+      );
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        onWillPop: () async {
-      final sholdpop = await showWarnig(context);
-      return sholdpop ?? false;
-    },
-
-       child: Scaffold(
+      onWillPop: () async {
+        final sholdpop = await showWarnig(context);
+        return sholdpop ?? false;
+      },
+      child: Scaffold(
         appBar: AppBar(
           title: const Text("BTRS"),
-
-
-
-
-
         ),
         body: Row(
           children: [
@@ -288,7 +278,8 @@ class _Order_ConfirmationState extends State<Order_Confirmation> {
                                   padding: const EdgeInsets.fromLTRB(
                                       0.0, 8.0, 8.0, 5.0),
                                   child: Text(
-                                      selectseatcontroller.totalcoast.toString(),
+                                      selectseatcontroller.totalcoast
+                                          .toString(),
                                       style: const TextStyle(
                                           color: Colors.green,
                                           fontSize: 18,
@@ -327,7 +318,8 @@ class _Order_ConfirmationState extends State<Order_Confirmation> {
                                         borderSide: const BorderSide(
                                             width: 3,
                                             color: Colors.black), //<-- SEE HERE
-                                        borderRadius: BorderRadius.circular(50.0),
+                                        borderRadius:
+                                            BorderRadius.circular(50.0),
                                       ),
                                       hintText: "Name",
                                       labelText: 'Please state your Name',
@@ -347,7 +339,8 @@ class _Order_ConfirmationState extends State<Order_Confirmation> {
                                         borderSide: const BorderSide(
                                             width: 3,
                                             color: Colors.black), //<-- SEE HERE
-                                        borderRadius: BorderRadius.circular(50.0),
+                                        borderRadius:
+                                            BorderRadius.circular(50.0),
                                       ),
                                       hintText: "Email",
                                       labelText:
@@ -369,7 +362,8 @@ class _Order_ConfirmationState extends State<Order_Confirmation> {
                                         borderSide: const BorderSide(
                                             width: 3,
                                             color: Colors.black), //<-- SEE HERE
-                                        borderRadius: BorderRadius.circular(40.0),
+                                        borderRadius:
+                                            BorderRadius.circular(40.0),
                                       ),
                                       hintText: "Mobile",
                                       labelText:
@@ -404,7 +398,7 @@ class _Order_ConfirmationState extends State<Order_Confirmation> {
             )
           ],
         ),
-    ),
+      ),
     );
   }
 }
@@ -417,8 +411,6 @@ void Onlinepay(String payable, email, name, mobile, demoDevicID) async {
   }
   String otpString = otp.toString();
 
-
-
   Sslcommerz sslstart = Sslcommerz(
       initializer: SSLCommerzInitialization(
           ipn_url: "https://btrs.ticket.symbexit.com/api/ipn",
@@ -430,16 +422,11 @@ void Onlinepay(String payable, email, name, mobile, demoDevicID) async {
           product_category: "hello",
           sdkType: "SSLCSdkType.TESTBOX"));
 
-
-
   try {
     SSLCTransactionInfoModel result = await sslstart.payNow();
 
     if (result.status!.toLowerCase() == "failed") {
-
-
       EasyLoading.showSuccess("Your Order  ");
-
     } else {
       palaceorder(name, mobile, email, result.cardType, result.tranId,
           result.currencyType, payable, demoDevicID, result.status);
@@ -448,36 +435,6 @@ void Onlinepay(String payable, email, name, mobile, demoDevicID) async {
     debugPrint(e.toString());
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 void palaceorder(String name, mobile, email, cardtype, tranID, currencytype,
     payable, demoDevicID, status) async {
@@ -497,7 +454,6 @@ void palaceorder(String name, mobile, email, cardtype, tranID, currencytype,
 
   var url = Uri.parse("https://btrs.ticket.symbexit.com/api/order");
 
-
   EasyLoading.show(status: "sending..");
   var response = await http.post(
     url,
@@ -511,8 +467,6 @@ void palaceorder(String name, mobile, email, cardtype, tranID, currencytype,
       title: 'Dip',
     ));
   } else {
-
-
-    EasyLoading.showError("Opps".toString());
+    EasyLoading.showError("Something Went Wrong");
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+
 class myprofildrwaer extends StatefulWidget {
   const myprofildrwaer({Key? key}) : super(key: key);
 
@@ -39,11 +40,8 @@ class _myprofildrwaerState extends State<myprofildrwaer> {
           ),
           const Text(
             "Bus Ticket System",
-            style:
-            TextStyle(
-                color: Colors.black,
-                fontSize: 20,
-                fontWeight: FontWeight.bold),
+            style: TextStyle(
+                color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ],
       ),

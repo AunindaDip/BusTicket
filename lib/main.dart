@@ -286,7 +286,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                         .format(date!);
                                     _dayName = DateFormat('EEEE', 'en_US')
                                         .format(date!);
-                                    print(_dayName);
                                   });
                                 });
                               },
@@ -380,7 +379,6 @@ class _MyHomePageState extends State<MyHomePage> {
       // Display an error message or prevent the selection from being made
     } else {
       a = stratingcity;
-      print(stratingcity);
     }
   }
 }
